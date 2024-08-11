@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
+    "gateway": "npx eg gateway create",
     "test": "pretty-quick --staged",
     "eslint": "eslint src/**/**/*.js --ignore-pattern \"node_modules/\"",
     "lint": "eslint --ignore-pattern \"node_modules/\" --fix --ext .js .",
@@ -29,6 +30,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.6",
+    "express-gateway": "^1.16.11",
     "express-myconnection": "^1.0.4",
     "express-reload": "^1.2.0",
     "express-request-id": "^1.4.1",
