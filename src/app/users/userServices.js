@@ -1,9 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
-const { User } = require("../../mongodb/users");
-const { ShoppingList } = require("../../mongodb/shoppinglist");
-const { Store } = require("../../mongodb/store");
-const { Cart } = require("../../mongodb/cart");
+const { User } = require("../../models/users");
 
 const createNewUser = async (userData) =>{
     const { email, fullName, ageRange, gender, phoneNumber, password } = userData;

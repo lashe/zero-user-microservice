@@ -1,10 +1,10 @@
-const models = require("../../models");
 const { jsonFailed, jsonS } = require("../../utils");
 const { phoneNubmerVerification, otpVerification, passwordChange, passwordUpdate } = require("./authServices");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const config = require("../../config/jwt");
-const { User } = require("../../mongodb/users");
+const { User } = require("../../models/users");
+const { googleVerify, googleAuthSignIn } = require("../services/google");
 
 let controller = {
     verifyPhoneNumber: async (req, res) => {
@@ -44,6 +44,45 @@ let controller = {
       } catch (error) {
         console.error(error)
       }
+    },
+
+    googleAuth: async (req, res) => {
+      const googleSignin = await googleAuthSignIn();
+      req.session.state = googleSignin.state;
+      res.redirect(googleSignin.authUrl);
+    },
+
+    googleSignUp: async (req, res) => {
+      const { code } = req.body;
+      const verifyIdtoken = await googleVerify(code);
+      if (verifyIdtoken) {
+        // save user details to database
+        return jsonS(res, 200, "success", verifyIdtoken, {});
+      }
+      return jsonFailed(res, null, "error verifying google account", 400);
+    },
+  
+    googleLogin: async (req, res) => {
+      const { code } = req.body;
+      const verifyIdtoken = await verify(code);
+      if (verifyIdtoken) {
+        return jsonS(res, 200, "success", verifyIdtoken, {});
+      }
+      return jsonFailed(res, null, "error verifying google account", 400);
+    },
+
+    googleRedirect: async (req, res) => {
+      const { authuser, code, hd, prompt, scope, state} = req.query;
+      console.log(req.query);
+      if (req.session.state === state) {
+        const verifyIdtoken = await googleVerify(code);
+      if (verifyIdtoken) {
+        return jsonS(res, 200, "success", verifyIdtoken, {});
+      }
+      return jsonFailed(res, null, "error verifying google account", 400);
+      }
+      console.log("incorrect");
+      return jsonFailed(res, null, "error verifying google account: unverrified attempt", 400);
     },
 
     // get authentication json web token

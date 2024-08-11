@@ -1,4 +1,4 @@
-const { User } = require("../../mongodb/users");
+const { User } = require("../../models/users");
 const { getOtp, verifyOtp } = require("../services/twilio");
 const bcrypt = require("bcryptjs");
 
