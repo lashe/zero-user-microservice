@@ -1,0 +1,39 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    env_file: ./.env
+    container_name: database
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+
+  server:
+    depends_on:
+      - mongodb
+    build:
+      context: .
+    env_file: ./.env
+    environment:
+      - NODE_ENV=$NODE_ENV
+      - JWT_SECRET=$JWT_SECRET
+      - GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+      - SESSION_SECRET=$SESSION_SECRET
+      - ACCOUNT_SID=$ACCOUNT_SID
+      - AUTH_TOKEN=$AUTH_TOKEN
+      - VERIFY_SERVICE_SID=$VERIFY_SERVICE_SID
+      - MONGO_DB=$MONGO_DB
+    ports:
+      - 3000:3000
