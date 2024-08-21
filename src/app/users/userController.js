@@ -1,11 +1,11 @@
 const { jsonFailed, jsonS } = require("../../utils");
-const { createNewUser, createNewShoppingList, addToList, addStore, getShoppingList, fetchAllShoppingLists } = require("./userServices");
+const { createNewUser } = require("./userServices");
 
 let controller = {
     signUp: async (req, res) => {
-        const { email, fullName, ageRange,gender, phoneNumber, password } = req.body;
+        const { email, fullName, phoneNumber, password } = req.body;
         if (!email) return jsonFailed(res, {}, "No email Provided", 400);
-        const newUser = { email, fullName, ageRange, gender, phoneNumber, password };
+        const newUser = { email, fullName, phoneNumber, password };
         const createUser = await createNewUser(newUser);
         console.log({returnedData: createUser});
         if (!createUser) return jsonFailed(res, {}, "Error Creating New User", 400);

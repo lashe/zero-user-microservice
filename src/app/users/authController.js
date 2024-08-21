@@ -53,24 +53,24 @@ let controller = {
       res.redirect(googleSignin.authUrl);
     },
 
-    googleSignUp: async (req, res) => {
-      const { code } = req.body;
-      const verifyIdtoken = await googleVerify(code);
-      if (verifyIdtoken) {
-        // save user details to database
-        return jsonS(res, 200, "success", verifyIdtoken, {});
-      }
-      return jsonFailed(res, null, "error verifying google account", 400);
-    },
+    // googleSignUp: async (req, res) => {
+    //   const { code } = req.body;
+    //   const verifyIdtoken = await googleVerify(code);
+    //   if (verifyIdtoken) {
+    //     // save user details to database
+    //     return jsonS(res, 200, "success", verifyIdtoken, {});
+    //   }
+    //   return jsonFailed(res, null, "error verifying google account", 400);
+    // },
   
-    googleLogin: async (req, res) => {
-      const { code } = req.body;
-      const verifyIdtoken = await verify(code);
-      if (verifyIdtoken) {
-        return jsonS(res, 200, "success", verifyIdtoken, {});
-      }
-      return jsonFailed(res, null, "error verifying google account", 400);
-    },
+    // googleLogin: async (req, res) => {
+    //   const { code } = req.body;
+    //   const verifyIdtoken = await verify(code);
+    //   if (verifyIdtoken) {
+    //     return jsonS(res, 200, "success", verifyIdtoken, {});
+    //   }
+    //   return jsonFailed(res, null, "error verifying google account", 400);
+    // },
 
     googleRedirect: async (req, res) => {
       const { authuser, code, hd, prompt, scope, state} = req.query;
@@ -80,8 +80,10 @@ let controller = {
       if (verifyIdtoken) {
         console.log("google", verifyIdtoken);
         const newUser = await createNewUserGoogle(verifyIdtoken);
-        if(!newUser) return jsonFailed(res, {}, "Error: User cannot be added", 400);
-        if(newUser === "exists") jsonFailed(res, {}, "User Already Exists, try loggin in", 404);
+        if(!newUser) return jsonFailed(res, {}, "Error: User cannot be added", 404);
+        if(newUser === "exists") jsonFailed(res, {}, "User Already Exists, try loggin in", 400);
+        // req.session.user = isUser;
+        //   const data = controller.getToken(isUser);
         return jsonS(res, 200, "success", newUser, {});
       }
       return jsonFailed(res, null, "error verifying google account", 400);

@@ -12,7 +12,8 @@ const createNewUser = async (userData) =>{
     const addUser = await User.create({
         _id: uuidv4(),
         email: email.toLowerCase(), 
-        fullName,  
+        fullName,
+        phoneNumber, 
         password: hashedPassword,
         isVerified: 1
     })
