@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const { User } = require("../../models/users");
 
 const createNewUser = async (userData) =>{
-    const { email, fullName, ageRange, gender, phoneNumber, password } = userData;
+    const { email, fullName, password } = userData;
     const userExists = await User.findOne({ email: email.toLowerCase() });
     if(userExists){
         return "exists";
@@ -12,11 +12,29 @@ const createNewUser = async (userData) =>{
     const addUser = await User.create({
         _id: uuidv4(),
         email: email.toLowerCase(), 
-        fullName, 
-        ageRange, 
-        gender,
-        phoneNumber, 
-        password: hashedPassword
+        fullName,  
+        password: hashedPassword,
+        isVerified: 1
+    })
+    if(!addUser){
+        return null;
+    }
+    return addUser;
+
+};
+
+const createNewUserGoogle = async (userData) =>{
+    const { email, name } = userData;
+    const userExists = await User.findOne({ email: email.toLowerCase() });
+    if(userExists){
+        return "exists";
+    }
+    const addUser = await User.create({
+        _id: uuidv4(),
+        email: email.toLowerCase(), 
+        fullName: name,  
+        googleSignin: 1,
+        isVerified: 1
     })
     if(!addUser){
         return null;
@@ -27,5 +45,6 @@ const createNewUser = async (userData) =>{
 
 
 module.exports = {
-    createNewUser
+    createNewUser,
+    createNewUserGoogle
 }

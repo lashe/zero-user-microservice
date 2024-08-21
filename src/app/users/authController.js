@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const config = require("../../config/jwt");
 const { User } = require("../../models/users");
 const { googleVerify, googleAuthSignIn } = require("../services/google");
+const { createNewUser, createNewUserGoogle } = require("./userServices");
 
 let controller = {
     verifyPhoneNumber: async (req, res) => {
@@ -73,11 +74,15 @@ let controller = {
 
     googleRedirect: async (req, res) => {
       const { authuser, code, hd, prompt, scope, state} = req.query;
-      console.log(req.query);
+      // console.log(req.query);
       if (req.session.state === state) {
         const verifyIdtoken = await googleVerify(code);
       if (verifyIdtoken) {
-        return jsonS(res, 200, "success", verifyIdtoken, {});
+        console.log("google", verifyIdtoken);
+        const newUser = await createNewUserGoogle(verifyIdtoken);
+        if(!newUser) return jsonFailed(res, {}, "Error: User cannot be added", 400);
+        if(newUser === "exists") jsonFailed(res, {}, "User Already Exists, try loggin in", 404);
+        return jsonS(res, 200, "success", newUser, {});
       }
       return jsonFailed(res, null, "error verifying google account", 400);
       }

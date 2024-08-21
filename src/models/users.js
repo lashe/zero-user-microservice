@@ -11,19 +11,25 @@ const UserSchema = new Schema({
   },
   phoneNumber: {
     type: String,
-    required: true
-  },
-  fullName: {
-    type: String,
     required: false
   },
-  ageRange: {
+  fullName: {
     type: String,
     required: false
   },
   gender: {
     type: Boolean,
     required: false,
+  },
+  mfa: {
+    type: Boolean,
+    required: false,
+    default: 0
+  },
+  googleSignin: {
+    type: Boolean,
+    required: false,
+    default: 0
   },
   isVerified: {
     type: Boolean,
