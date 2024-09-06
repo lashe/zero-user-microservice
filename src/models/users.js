@@ -21,10 +21,20 @@ const UserSchema = new Schema({
     type: Boolean,
     required: false,
   },
+  otpSecret: {
+    type: String,
+    required: false,
+    select: false
+  },
   mfa: {
     type: Boolean,
     required: false,
     default: 0
+  },
+  mfaType: {
+    type: String,
+    required: false,
+    enum: ["device", "sms"]
   },
   googleSignin: {
     type: Boolean,
@@ -39,7 +49,7 @@ const UserSchema = new Schema({
   isActive: {
     type: Boolean,
     required: false,
-    default: 0
+    default: 1
   },
   isDeleted: {
     type: Boolean,
@@ -60,6 +70,14 @@ const UserSchema = new Schema({
     type: String,
     required: false,
     select: false
+  },
+  failedLoginAttempts: {
+    type: Number,
+    required: false,
+    default: 0
+  },
+  lockUntil: { 
+    type: Date 
   }
 },
 {
