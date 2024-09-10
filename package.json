@@ -1,7 +1,7 @@
 {
-  "name": "zta-microservice-2",
+  "name": "zta-user-microservice",
   "version": "1.0.0",
-  "description": "microservice for zero trust architecture security",
+  "description": "user microservice for zero trust architecture security",
   "main": "src/index.js",
   "author": "Toluwalase Dada",
   "license": "ISC",
