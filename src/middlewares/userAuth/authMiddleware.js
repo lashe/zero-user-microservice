@@ -2,6 +2,7 @@ let jwt = require("jsonwebtoken");
 const config = require("../../config/jwt");
 const { jsonFailed } = require("../../utils");
 const Logger = require("../../utils/logger");
+const { Permission } = require("../../models/permission");
 const blacklistedTokens = new Set();
 
 let middleware = {
@@ -67,6 +68,66 @@ unAuth: (req, res, next) => {
       }
       next();
   });
+},
+
+// policy for CRUD function
+policy1: async (req, res, next) => {
+  const { id } = req.user;
+  const getUser = await Permission.findOne({ userId: id });
+  if(!getUser) {
+    Logger.error(`user: ${id} permission not found`);
+    return jsonFailed(res, {}, "User not found", 400);
+  }
+  if(getUser.permission !== 4) {
+    Logger.error(`user: ${id} does not have permission for this action`);
+    return jsonFailed(res, {}, "you do not have permission for this action", 400);
+  }
+  next();
+},
+
+// Policy for viewing, creating and updating
+policy2: async (req, res, next) => {
+  const { id } = req.user;
+  const getUser = await Permission.findOne({ userId: id });
+  if(!getUser) {
+    Logger.error(`user: ${id} permission not found`);
+    return jsonFailed(res, {}, "User not found", 400);
+  }
+  if(getUser.permission !== 3 && getUser.permission < 3) {
+    Logger.error(`user: ${id} does not have permission for this action`);
+    return jsonFailed(res, {}, "you do not have permission for this action", 400);
+  }
+  next();
+},
+
+// Policy for viewing and creating
+policy3: async (req, res, next) => {
+  const { id } = req.user;
+  const getUser = await Permission.findOne({ userId: id });
+  if(!getUser) {
+    Logger.error(`user: ${id} permission not found`);
+    return jsonFailed(res, {}, "User not found", 400);
+  }
+  if(getUser.permission !== 2 && getUser.permission < 2) {
+    Logger.error(`user: ${id} does not have permission for this action`);
+    return jsonFailed(res, {}, "you do not have permission for this action", 400);
+  }
+  next();
+},
+
+// Policy for viewing only
+policy4: async (req, res, next) => {
+  const { id } = req.user;
+  const getUser = await Permission.findOne({ userId: id });
+  if(!getUser) {
+    Logger.error(`user: ${id} not found`);
+    return jsonFailed(res, {}, "User not found", 400);
+  }
+  if(getUser.permission !== 1 && getUser.permission < 1) {
+    Logger.error(`user: ${id} does not have permission for this action`);
+    return jsonFailed(res, {}, "you do not have permission for this action", 400);
+  }
+  next();
 }
 
 };

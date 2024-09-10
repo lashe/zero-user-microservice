@@ -73,21 +73,10 @@ const getUser = async(id) => {
     }
 };
 
-const validateUser = async(id) => {
-    try {
-        const isUser = await User.findOne({ _id: id });
-    if (!isUser) return false;
-    return true;
-    } catch (error) {
-        Logger.error(error);
-        return false;
-    }
-};
 
 module.exports = {
     createNewUser,
     createNewUserGoogle,
     updateUser,
-    getUser,
-    validateUser
+    getUser
 }
