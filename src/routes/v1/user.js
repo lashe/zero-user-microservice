@@ -9,6 +9,7 @@ router.get("/profile", auth, UserController.getUserbyId);
 router.patch("/profile", auth, UserController.updateUserProfile);
 router.get("/activities", auth, UserController.getUserActivities);
 router.get("/logout", auth, unAuth, UserController.logout);
+
 // 404 response
 router.get("**", function (req, res) {
     res.status(404).json({ error: "Resource not found" });

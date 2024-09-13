@@ -31,7 +31,7 @@ let controller = {
     getUserActivities: async(req, res) => {
         const { id } = req.user;
         const fetchUserActivities = await getActivity(id, req.query);
-        if(!fetchUserActivities) return jsonFailed(res, {}, "Unable to find User", 400);
+        // if(!fetchUserActivities) return jsonFailed(res, {}, "Unable to find User", 400);
         return jsonS(res, 200, "successful", fetchUserActivities);
     },
 
